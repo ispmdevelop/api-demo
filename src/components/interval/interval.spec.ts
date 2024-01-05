@@ -3,12 +3,12 @@ import app from '../../app';
 import { IntervalService } from './interval.service';
 import { GetIntervalRequestDto } from './dto/getIntervalDto';
 
-import { validInput1 } from '../../test-data/interval/requests';
-import { validationErrors } from '../../test-data/interval/errors';
+import { validInput1 } from '../../../mock-data/interval/requests';
+import { validationErrors } from '../../../mock-data/interval/errors';
 import {
   getIntervalResponseData,
   getPreviousEventResponseData,
-} from '../../test-data/interval/service';
+} from '../../../mock-data/interval/service';
 import { EventModel } from './interval.model';
 
 let validInput: Partial<GetIntervalRequestDto>;
