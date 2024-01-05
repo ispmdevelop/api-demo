@@ -10,7 +10,8 @@
     "./dist",
     "jest.config.js",
     "node_modules",
-    "src/test-data"
+    "src/test-data",
+    "src/**/*.spec.ts"
   ],
   "compilerOptions": {
     "target": "es2016",
