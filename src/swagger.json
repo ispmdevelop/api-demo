@@ -1,0 +1,107 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"IntervalModel": {
+				"properties": {
+					"event": {
+						"type": "string"
+					},
+					"from": {
+						"type": "number",
+						"format": "double"
+					},
+					"to": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"event",
+					"from",
+					"to"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetIntervalResponseDto": {
+				"items": {
+					"$ref": "#/components/schemas/IntervalModel"
+				},
+				"type": "array"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "api-demo",
+		"version": "1.0.0",
+		"description": "Api demo for back-end development position",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Isaac Paz ",
+			"email": "ispmdevelop@gmail.com"
+		}
+	},
+	"paths": {
+		"/interval": {
+			"get": {
+				"operationId": "GetInterval",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetIntervalResponseDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "startDate",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "vehicleId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

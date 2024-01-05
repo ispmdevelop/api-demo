@@ -1,0 +1,42 @@
+{
+  "name": "api-demo",
+  "version": "1.0.0",
+  "description": "Api demo for back-end development position",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "dev": "npm run build-spec && concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+    "build": "tsoa spec && tsc",
+    "start": "node dist/server.js",
+    "build-spec": "tsoa spec"
+  },
+  "author": "Isaac Paz <ispmdevelop@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.3",
+    "swagger-ui-express": "^5.0.0",
+    "tsoa": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.11",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.10.6",
+    "@types/pg": "^8.10.9",
+    "@types/swagger-ui-express": "^4.1.6",
+    "concurrently": "^8.2.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
