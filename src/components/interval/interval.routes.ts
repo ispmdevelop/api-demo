@@ -12,7 +12,7 @@ router.get('/', getIntervalValidation, async (req: Request, res: Response) => {
     req.query.endDate as any,
     req.query.vehicleId as any
   );
-  return res.json(createSuccessResponse(200, 'Success', data));
+  return res.json(data);
 });
 
 export { router as intervalRouter };
