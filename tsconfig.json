@@ -1,17 +1,17 @@
 {
-  "exclude": [
-    "./coverage",
-    "./dist",
-    "__tests__",
-    "jest.config.js",
-    "node_modules"
-  ],
   "ts-node": {
     "transpileOnly": true,
     "files": true
   },
   "typeRoots": ["node_modules/@types"],
-  "include": ["src/swagger-output.json", "src/**/*"],
+  "include": ["src/**/*"],
+  "exclude": [
+    "./coverage",
+    "./dist",
+    "jest.config.js",
+    "node_modules",
+    "src/test-data"
+  ],
   "compilerOptions": {
     "target": "es2016",
     "module": "commonjs",
