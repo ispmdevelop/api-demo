@@ -34,6 +34,47 @@
 					"$ref": "#/components/schemas/IntervalModel"
 				},
 				"type": "array"
+			},
+			"IResponse_GetIntervalResponseDto_": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/GetIntervalResponseDto"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IResponse____": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {},
+						"type": "object"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -56,11 +97,11 @@
 				"operationId": "GetInterval",
 				"responses": {
 					"200": {
-						"description": "OK",
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetIntervalResponseDto"
+									"$ref": "#/components/schemas/IResponse_GetIntervalResponseDto_"
 								}
 							}
 						}
@@ -69,6 +110,9 @@
 						"description": "Bad Request"
 					}
 				},
+				"tags": [
+					"Interval"
+				],
 				"security": [],
 				"parameters": [
 					{
@@ -96,6 +140,28 @@
 						}
 					}
 				]
+			}
+		},
+		"/health": {
+			"get": {
+				"operationId": "GetHealth",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IResponse____"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Health"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},

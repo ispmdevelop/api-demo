@@ -4,15 +4,18 @@
   "description": "Api demo for back-end development position",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
-    "dev": "npm run build-spec && concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
-    "build": "tsoa spec && tsc",
+    "test": "jest",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+    "predev": "tsoa spec",
+    "build": "tsc",
+    "prebuild": "tsoa spec",
     "start": "node dist/server.js",
     "build-spec": "tsoa spec"
   },
   "author": "Isaac Paz <ispmdevelop@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/supertest": "^6.0.2",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "body-parser": "^1.20.2",
