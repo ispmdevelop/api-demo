@@ -56,6 +56,6 @@ export class IntervalService {
         limit 1`,
       [vehicleId, date]
     );
-    return result.rows[0] as EventModel;
+    return result.rows[0] as EventModel | undefined;
   }
 }
