@@ -1,9 +1,19 @@
+export interface IResponse<T> {
+  statusCode: number;
+  message: string;
+  data?: T;
+}
+
 export const createSuccessResponse = (
   statusCode: number,
   message: string,
   data: any
 ) => {
-  return data;
+  return {
+    statusCode,
+    message,
+    data,
+  };
 };
 
 export const createErrorResponse = (

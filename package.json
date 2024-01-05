@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "npm run build-spec && concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
-    "build": "tsoa spec && tsc",
+    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+    "predev": "tsoa spec",
+    "build": "tsc",
+    "prebuild": "tsoa spec",
     "start": "node dist/server.js",
     "build-spec": "tsoa spec"
   },

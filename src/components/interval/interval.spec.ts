@@ -10,6 +10,7 @@ import {
   getPreviousEventResponseData,
 } from '../../../mock-data/interval/service';
 import { EventModel } from './interval.model';
+import { getEpochTime } from '../../utils/time.utils';
 
 let validInput: Partial<GetIntervalRequestDto>;
 
@@ -126,12 +127,12 @@ describe('Interval Component', () => {
       it('it should return one interval with the event value of the previous event with start and end date same as input', async () => {
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         expect(interval.length).toBe(1);
         expect(interval[0]).toEqual({
           event: getPreviousEventResponseData.valid.event,
-          from: new Date(validInput.startDate + 'Z').getTime(),
-          to: new Date(validInput.endDate + 'Z').getTime(),
+          from: getEpochTime(validInput.startDate),
+          to: getEpochTime(validInput.endDate),
         });
       });
     });
@@ -146,7 +147,7 @@ describe('Interval Component', () => {
       it('it should return two intervals 1st the previous event, 2nd the event retrieved', async () => {
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         expect(interval.length).toBe(2);
         expect(interval[0].event).toBe(
           getPreviousEventResponseData.valid.event
@@ -168,7 +169,7 @@ describe('Interval Component', () => {
       it('it should return two intervals 1st the previous event, 2nd one event representing the continuos same type events', async () => {
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         expect(interval.length).toBe(2);
         expect(interval[0].event).toBe(
           getPreviousEventResponseData.valid.event
@@ -177,9 +178,7 @@ describe('Interval Component', () => {
           getIntervalResponseData.sameTypeEvents[0].event
         );
         expect(interval[1].from).toBe(
-          new Date(
-            getIntervalResponseData.sameTypeEvents[0].timestamp + 'Z'
-          ).getTime()
+          getEpochTime(getIntervalResponseData.sameTypeEvents[0].timestamp)
         );
       });
     });
@@ -194,17 +193,13 @@ describe('Interval Component', () => {
       it('it should return the previous event with from and to date equals as startDate and endDate from input', async () => {
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         expect(interval.length).toBe(1);
         expect(interval[0].event).toBe(
           getPreviousEventResponseData.valid.event
         );
-        expect(interval[0].from).toBe(
-          new Date(validInput.startDate + 'Z').getTime()
-        );
-        expect(interval[0].to).toBe(
-          new Date(validInput.endDate + 'Z').getTime()
-        );
+        expect(interval[0].from).toBe(getEpochTime(validInput.startDate));
+        expect(interval[0].to).toBe(getEpochTime(validInput.endDate));
       });
     });
     describe('when fist event timestamp is equal to startDate', () => {
@@ -218,20 +213,14 @@ describe('Interval Component', () => {
         validInput.startDate = getIntervalResponseData.oneEvent[0].timestamp;
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         expect(interval.length).toBeGreaterThanOrEqual(2);
         expect(interval[0].event).toBe(
           getPreviousEventResponseData.valid.event
         );
-        expect(interval[0].from).toBe(
-          new Date(validInput.startDate + 'Z').getTime()
-        );
-        expect(interval[0].to).toBe(
-          new Date(validInput.startDate + 'Z').getTime()
-        );
-        expect(interval[1].from).toBe(
-          new Date(validInput.startDate + 'Z').getTime()
-        );
+        expect(interval[0].from).toBe(getEpochTime(validInput.startDate));
+        expect(interval[0].to).toBe(getEpochTime(validInput.startDate));
+        expect(interval[1].from).toBe(getEpochTime(validInput.startDate));
       });
     });
     describe('when last event timestamp is equal to endDate', () => {
@@ -249,11 +238,11 @@ describe('Interval Component', () => {
           ].timestamp;
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         const responseLength = interval.length;
         expect(interval.length).toBeGreaterThanOrEqual(1);
         expect(interval[responseLength - 1].to).toBe(
-          new Date(validInput.endDate + 'Z').getTime()
+          getEpochTime(validInput.endDate)
         );
       });
     });
@@ -267,7 +256,7 @@ describe('Interval Component', () => {
       it('it should return the array of intervals with the first interval event value equals to "no_data"', async () => {
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
-        const interval = response.body;
+        const interval = response.body.data;
         const responseLength = interval.length;
         expect(interval.length).toBeGreaterThanOrEqual(1);
         expect(interval[0].event).toBe('no_data');
