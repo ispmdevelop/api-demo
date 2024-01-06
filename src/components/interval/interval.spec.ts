@@ -19,7 +19,7 @@ const spyOnServicesMethod = (
   previousEventBeforeDateResponse: EventModel | undefined
 ) => {
   jest
-    .spyOn(IntervalService.prototype, 'getInterval2')
+    .spyOn(IntervalService.prototype, 'getInterval')
     .mockImplementation(
       async (vehicleId: string, startDate: string, endDate: string) =>
         getIntervalResponse
@@ -209,18 +209,16 @@ describe('Interval Component', () => {
           getPreviousEventResponseData.valid
         );
       });
-      it('it should return the previous event with from and to date equals as startDate, and second interval must also begin with the startDate', async () => {
+      it('it should return the interval that begins with that timestamp, and forget about the previous one', async () => {
         validInput.startDate = getIntervalResponseData.oneEvent[0].timestamp;
         const response = await request(app).get('/interval').query(validInput);
         expect(response.status).toBe(200);
         const interval = response.body.data;
-        expect(interval.length).toBeGreaterThanOrEqual(2);
+        expect(interval.length).toBeGreaterThanOrEqual(1);
         expect(interval[0].event).toBe(
-          getPreviousEventResponseData.valid.event
+          getIntervalResponseData.oneEvent[0].event
         );
         expect(interval[0].from).toBe(getEpochTime(validInput.startDate));
-        expect(interval[0].to).toBe(getEpochTime(validInput.startDate));
-        expect(interval[1].from).toBe(getEpochTime(validInput.startDate));
       });
     });
     describe('when last event timestamp is equal to endDate', () => {

@@ -13,20 +13,9 @@ export class IntervalService {
 
   async getInterval(vehicleId: string, startDate: string, endDate: string) {
     const result = await this.pool.query(
-      `SELECT * FROM "api-demo".vehicle_event
-        where vehicle_id = $1 
-          and "timestamp" between $2 and $3
-        order by "timestamp";`,
-      [vehicleId, startDate, endDate]
-    );
-    return result.rows as EventModel[];
-  }
-
-  async getInterval2(vehicleId: string, startDate: string, endDate: string) {
-    const result = await this.pool.query(
       `SELECT 
         MIN(id) as id,
-        MIN(timestamp) as timestamp,
+        MIN(timestamp) || '' as timestamp,
         vehicle_id,
         event
       FROM (
