@@ -4,7 +4,7 @@ dotenv.config();
 import express, { NextFunction, Request, Response } from 'express';
 import serverless from 'serverless-http';
 import cors from 'cors';
-import { NetworkResponse } from '../classes/NetworkReponse';
+import { NetworkResponse } from '../classes/NetworkResponse';
 import PolicyRouter from '../modules/policy/Policy.routes';
 
 const app = express();
