@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "ec01989f-534f-4142-b067-fd0c83a66f86",
+		"name": "Api Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5600156"
+	},
+	"item": [
+		{
+			"name": "Get Policy by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/fetch_policy?policy_id=target-b5c498c1cc6abebf",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"fetch_policy"
+					],
+					"query": [
+						{
+							"key": "policy_id",
+							"value": "target-b5c498c1cc6abebf"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "source Policy 1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://44.200.185.122:3000/fetch_policy?policy_id=12345",
+							"protocol": "http",
+							"host": [
+								"44",
+								"200",
+								"185",
+								"122"
+							],
+							"port": "3000",
+							"path": [
+								"fetch_policy"
+							],
+							"query": [
+								{
+									"key": "policy_id",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "source Policy 2",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://44.200.185.122:3000/fetch_policy?policy_id=123456",
+							"protocol": "http",
+							"host": [
+								"44",
+								"200",
+								"185",
+								"122"
+							],
+							"port": "3000",
+							"path": [
+								"fetch_policy"
+							],
+							"query": [
+								{
+									"key": "policy_id",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "target policy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://44.200.185.122:3000/fetch_policy?policy_id=TGT-001",
+							"protocol": "http",
+							"host": [
+								"44",
+								"200",
+								"185",
+								"122"
+							],
+							"port": "3000",
+							"path": [
+								"fetch_policy"
+							],
+							"query": [
+								{
+									"key": "policy_id",
+									"value": "TGT-001"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Create Policy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"policyId\": \"TGT-002\",\n  \"name\": \"Enforce Encryption on Databases\",\n  \"description\": \"Ensures all database resources are encrypted to meet compliance standards.\",\n  \"conditions\": [\n    { \"attribute\": \"encryption_enabled\", \"condition\": \"equals\", \"value\": \"false\" }\n  ],\n  \"actions\": [\"deny\"],\n  \"resources\": [\"arn:aws:rds:::db-instance/*\"],\n  \"severity\": \"high\",\n  \"policyType\": \"config\",\n  \"complianceMetadata\": [\"ISO 27001\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/deliver_policy",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"deliver_policy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Model-completion",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userInput\": \"get me the policy with id 123456, translate it to spanish, and resgister the policy\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/model/completion",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"model",
+						"completion"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Only retrieve a policy by id",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userInput\": \"get me the policy with id 123456, do not do anything else\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/model/completion",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"model",
+								"completion"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Retrieve and translate to spanish policy",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userInput\": \"get me the policy with id 123456 and translate it to spanish, do not do anything else\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/model/completion",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"model",
+								"completion"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Retrieve and translate to german",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userInput\": \"get me the policy with id 123456 and translate it to german, do not do anything else\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/model/completion",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"model",
+								"completion"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Retrieve, translate and save it",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userInput\": \"get me the policy with id 123456, translate it to german, and resgister the policy\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/model/completion",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"model",
+								"completion"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	]
+}

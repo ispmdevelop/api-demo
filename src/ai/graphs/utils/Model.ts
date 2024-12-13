@@ -1,6 +1,5 @@
 import { ChatOpenAI } from '@langchain/openai';
 import { ChatBedrockConverse } from '@langchain/aws';
-import { ChatOllama } from '@langchain/ollama';
 
 export interface OpenAIConfiguration {
   key: string;
