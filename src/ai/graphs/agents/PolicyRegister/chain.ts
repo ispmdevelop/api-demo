@@ -4,8 +4,10 @@ import { getModel } from '../../utils';
 import { AgentStateChannels } from '../../SourceConversionToCIR/state';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { PolicyRepository } from '../../../../repository/Policy.repository';
-import { Policy } from '../../../../types/Policy';
+import { JsonOutputToolsParser } from '@langchain/core/output_parsers/openai_tools';
 import crypto from 'crypto';
+import { ToolDefinition } from '@langchain/core/language_models/base';
+import { cleanMessageHistory } from '../../utils/CleanMessage';
 
 function generateUUID(length: number) {
   return crypto.randomBytes(length / 2).toString('hex');
@@ -94,17 +96,19 @@ const extractionFunctionSchema = {
   },
 };
 
-type ChainResponse = Policy;
+const extractionTool: ToolDefinition = {
+  type: 'function',
+  function: extractionFunctionSchema,
+};
 
 export async function policyRegistererChain(state: AgentStateChannels) {
   const { messages, translatedPolicy, sourcePolicy } = state;
   const model = getModel();
 
-  const jsonParser = new JsonOutputFunctionsParser();
+  const jsonParser = new JsonOutputToolsParser();
 
-  const runnable = model.bind({
-    functions: [extractionFunctionSchema],
-    function_call: { name: 'extractor' },
+  const runnable = model.bindTools([extractionTool], {
+    tool_choice: extractionTool.function.name,
   });
 
   const systemPrompt = `You are an assistant to generate JSON policies, based on the policy provided return it in JSON format, and assign the id assigned from the user`;
@@ -124,13 +128,15 @@ export async function policyRegistererChain(state: AgentStateChannels) {
   const res = (await chain.invoke({
     chat_history: messages,
     policy: translatedPolicy || sourcePolicy,
-  })) as ChainResponse;
+  })) as any;
+
+  const policy = res[0].args;
 
   try {
-    policyRepository.create(res);
+    policyRepository.create(policy);
     return {
       policy: res,
-      message: `Policy created successfully with id: ${res.policyId}`,
+      message: `Policy created successfully with id: ${policy.policyId}`,
     };
   } catch (e: any) {
     return {

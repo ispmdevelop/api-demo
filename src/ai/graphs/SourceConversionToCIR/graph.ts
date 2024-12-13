@@ -35,7 +35,9 @@ export const getGraph = async () => {
     .addNode('supervisor', supervisorChain);
 
   workflow.addEdge(START, 'supervisor');
+
   workflow.addConditionalEdges('supervisor', (x: AgentStateChannels) => x.next);
+
   members.forEach((member) => {
     workflow.addEdge(member, 'supervisor');
   });

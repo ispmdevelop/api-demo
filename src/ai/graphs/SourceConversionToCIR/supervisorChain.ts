@@ -12,7 +12,8 @@ export const getSupervisorChain = async (members: string[]) => {
     ' following workers: {members}. Given the following user request,' +
     ' respond with the worker to act next. Each worker will perform a' +
     ' task and respond with their results and status. When finished,' +
-    ' respond with FINISH.';
+    ' respond with FINISH.' +
+    ' Chat history: ${messages}';
   const options = [END, ...members];
 
   // Define the routing function
@@ -39,11 +40,10 @@ export const getSupervisorChain = async (members: string[]) => {
 
   const prompt = ChatPromptTemplate.fromMessages([
     ['system', systemPrompt],
-    new MessagesPlaceholder('messages'),
     [
-      'system',
+      'user',
       'Given the conversation above, who should act next?' +
-        'Or should we FINISH? Select one of: {options}',
+        ' Or should we FINISH? Select one of: {options}',
     ],
   ]);
 
@@ -57,11 +57,14 @@ export const getSupervisorChain = async (members: string[]) => {
   const supervisorChain = formattedPrompt
     .pipe(
       llm.bindTools([toolDef], {
-        tool_choice: { type: 'function', function: { name: 'route' } },
+        tool_choice: toolDef.function.name,
       })
     )
     .pipe(new JsonOutputToolsParser())
-    .pipe((x: any) => x[0].args);
+    .pipe((x: any) => {
+      console.log('Supervisor chain output:', x);
+      return x[0].args;
+    });
 
   return supervisorChain;
 };

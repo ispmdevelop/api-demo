@@ -2,8 +2,10 @@ import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { MessagesPlaceholder } from '@langchain/core/prompts';
 import { getModel } from '../../utils';
 import { AgentStateChannels } from '../../SourceConversionToCIR/state';
-import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { Policy } from '../../../../types/Policy';
+import { ToolDefinition } from '@langchain/core/language_models/base';
+import { JsonOutputToolsParser } from '@langchain/core/output_parsers/openai_tools';
+import { cleanMessageHistory } from '../../utils/CleanMessage';
 
 const extractionFunctionSchema = {
   name: 'extractor',
@@ -100,22 +102,25 @@ interface ChainResponse {
   policy: Policy;
 }
 
+const extractionTool: ToolDefinition = {
+  type: 'function',
+  function: extractionFunctionSchema,
+};
+
 export async function policyLanguageTranslatorChain(state: AgentStateChannels) {
   const { messages, sourcePolicy } = state;
   const model = getModel();
 
-  const jsonParser = new JsonOutputFunctionsParser();
+  const jsonParser = new JsonOutputToolsParser();
 
-  const runnable = model.bind({
-    functions: [extractionFunctionSchema],
-    function_call: { name: 'extractor' },
+  const runnable = model.bindTools([extractionTool], {
+    tool_choice: extractionTool.function.name,
   });
 
-  const systemPrompt = `You are a policy translator you are going to be given a policy to translate to a different language specified by the use only the values`;
+  const systemPrompt = `You are a policy translator you are going to be given a policy to translate to a different language specified by the user, (only translate the values)`;
 
   const prompt = ChatPromptTemplate.fromMessages([
     ['system', systemPrompt],
-    new MessagesPlaceholder('chat_history'),
     [
       'human',
       `Translate the policy to the specified language policy: {policy}`,
@@ -127,10 +132,14 @@ export async function policyLanguageTranslatorChain(state: AgentStateChannels) {
   const res = (await chain.invoke({
     chat_history: messages,
     policy: sourcePolicy,
-  })) as ChainResponse;
+  })) as any;
+
+  const policyTranslated = res[0].args;
 
   return {
-    policy: res,
-    message: `Policy translated successfully ${JSON.stringify(res)}`,
+    policy: policyTranslated,
+    message: `Policy translated successfully ${JSON.stringify(
+      policyTranslated
+    )}`,
   };
 }

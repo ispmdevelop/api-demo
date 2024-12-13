@@ -3,6 +3,7 @@ import { MessagesPlaceholder } from '@langchain/core/prompts';
 import { BaseMessage } from '@langchain/core/messages';
 import { getModel } from '../../utils';
 import { AgentStateChannels } from '../../SourceConversionToCIR/state';
+import { cleanMessageHistory } from '../../utils/CleanMessage';
 
 export async function chatQaChain(state: AgentStateChannels) {
   const { messages } = state;

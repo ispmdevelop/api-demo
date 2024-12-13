@@ -2,8 +2,10 @@ import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { MessagesPlaceholder } from '@langchain/core/prompts';
 import { getModel } from '../../utils';
 import { AgentStateChannels } from '../../SourceConversionToCIR/state';
-import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
 import { PolicyRepository } from '../../../../repository/Policy.repository';
+import { JsonOutputToolsParser } from '@langchain/core/output_parsers/openai_tools';
+import { ToolDefinition } from '@langchain/core/language_models/base';
+import { cleanMessageHistory } from '../../utils/CleanMessage';
 
 const policyRepository = new PolicyRepository();
 
@@ -22,19 +24,19 @@ const extractionFunctionSchema = {
   },
 };
 
-interface ChainResponse {
-  policyId: string;
-}
+const extractionTool: ToolDefinition = {
+  type: 'function',
+  function: extractionFunctionSchema,
+};
 
 export async function policyRetrieverChain(state: AgentStateChannels) {
   const { messages } = state;
   const model = getModel();
 
-  const jsonParser = new JsonOutputFunctionsParser();
+  const jsonParser = new JsonOutputToolsParser();
 
-  const runnable = model.bind({
-    functions: [extractionFunctionSchema],
-    function_call: { name: 'extractor' },
+  const runnable = model.bindTools([extractionTool], {
+    tool_choice: extractionTool.function.name,
   });
 
   const systemPrompt = `You are an assistant to retrieve policies, get the id of the policy Id`;
@@ -48,9 +50,10 @@ export async function policyRetrieverChain(state: AgentStateChannels) {
 
   const res = (await chain.invoke({
     chat_history: messages,
-  })) as ChainResponse;
+  })) as any;
 
-  const policy = policyRepository.getById(res.policyId);
+  const policyId = res[0].args.policyId;
+  const policy = policyRepository.getById(policyId);
 
   return {
     policy: policy,
