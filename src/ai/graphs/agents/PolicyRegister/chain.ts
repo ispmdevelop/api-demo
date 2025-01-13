@@ -133,7 +133,7 @@ export async function policyRegistererChain(state: AgentStateChannels) {
   const policy = res[0].args;
 
   try {
-    policyRepository.create(policy);
+    await policyRepository.create(policy);
     return {
       policy: res,
       message: `Policy created successfully with id: ${policy.policyId}`,

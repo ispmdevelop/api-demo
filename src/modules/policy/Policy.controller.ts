@@ -57,7 +57,7 @@ export class PolicyController {
       );
   }
 
-  create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const policy = req.body;
     if (!policy) {
       return res
@@ -66,7 +66,7 @@ export class PolicyController {
           NetworkResponse.CreateErrorResponse('Please provide a policy', 400)
         );
     }
-    const count = policyRepository.create(policy);
+    const count = await policyRepository.create(policy);
     return res
       .status(201)
       .json(
