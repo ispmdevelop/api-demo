@@ -33,7 +33,7 @@ export class PolicyController {
     );
   }
 
-  get(req: Request, res: Response) {
+  async get(req: Request, res: Response) {
     const policyId = req.query.policy_id as string;
     if (!policyId) {
       return res
@@ -42,7 +42,8 @@ export class PolicyController {
           NetworkResponse.CreateErrorResponse('Policy ID is required.', 400)
         );
     }
-    const policy = policyRepository.getById(policyId);
+    console.log('policyId', policyId);
+    const policy = await policyRepository.getById(policyId);
     if (!policy) {
       return res
         .status(404)
