@@ -16,7 +16,7 @@ export const agentStateChannels: StateGraphArgs<AgentStateChannels>['channels'] 
   {
     messages: {
       value: (x?: BaseMessage[], y?: BaseMessage[]) =>
-        cleanMessageHistory((x ?? []).concat(y ?? [])),
+        (x ?? []).concat(y ?? []),
       default: () => [],
     },
     sourcePolicy: {

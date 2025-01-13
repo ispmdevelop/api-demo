@@ -1,4 +1,5 @@
 import { Policy } from '../types/Policy';
+import { PolicyRetriever } from '../services/PolicyRetriver';
 
 const policies: Policy[] = [
   {
@@ -43,8 +44,13 @@ const policies: Policy[] = [
 ];
 
 export class PolicyRepository {
-  getById(id: string): Policy | undefined {
-    return policies.find((policy) => policy.policyId === id);
+  async getById(id: string) {
+    try {
+      return await PolicyRetriever.getPolicy(id);
+    } catch (err) {
+      console.log('err policy get by Id: ', err);
+      return { error: 'Policy not found' };
+    }
   }
   create(policy: Policy): number {
     policies.push(policy);

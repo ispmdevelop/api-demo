@@ -11,8 +11,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "ts-node ./src/lambda/handler.ts",
-    "zip": "npm run compile && (cd dist && zip -r lambda.zip .)",
-    "compile": "tsc && cp package.json dist/package.json && cd dist && npm install --omit=dev && rm *.json",
+    "zip": "yarn run compile && (cd dist && zip -r lambda.zip .)",
+    "compile": "tsc && cp package.json dist/package.json && cd dist && yarn install --omit=dev && rm *.json",
     "clean": "rm -r dist",
     "test": "jest"
   },
@@ -26,8 +26,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@aws-crypto/sha256-js": "^5.2.0",
-    "@aws-sdk/types": "^3.709.0",
+    "@aws-sdk/client-iam": "^3.726.1",
     "@langchain/aws": "^0.1.2",
     "@langchain/community": "^0.3.18",
     "@langchain/core": "^0.3.23",

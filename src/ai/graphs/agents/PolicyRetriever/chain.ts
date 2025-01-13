@@ -53,7 +53,7 @@ export async function policyRetrieverChain(state: AgentStateChannels) {
   })) as any;
 
   const policyId = res[0].args.policyId;
-  const policy = policyRepository.getById(policyId);
+  const policy = await policyRepository.getById(policyId);
 
   return {
     policy: policy,
