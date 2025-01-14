@@ -1,20 +1,40 @@
 import { Policy } from '../types/Policy';
-import { AWSPolicyService } from '../services/PolicyRetriver';
-import { AzurePolicyWriter } from '../services/AzurePolicyWriter';
+import { AWSPolicyService } from '../services/AWSPolicyService';
+import { GCPPolicyService } from '../services/GCPPolicyService';
 
-const azurePolicyWriter = new AzurePolicyWriter();
+const gcpPolicyService = new GCPPolicyService();
+
+enum CloudType {
+  GCP = 'gcp',
+  AWS = 'aws',
+}
 
 export class PolicyRepository {
   async getById(id: string) {
     try {
-      return await AWSPolicyService.getPolicy(id);
+      let res;
+      try {
+        res = await gcpPolicyService.getRole(id);
+      } catch (e) {
+        console.log('error trying to get policy from gcp');
+      }
+      if (!res) {
+        console.log('trying with aws')
+        res = await AWSPolicyService.getPolicy(id);
+      }
+      return res;
     } catch (err) {
       console.log('err policy get by Id: ', err);
       return { error: 'Policy not found' };
     }
   }
-  async create(policy: any) {
-    const res = await AWSPolicyService.writePolicy(policy);
-    return res;
+  async create(policy: any, type: string = CloudType.AWS) {
+    if (type == CloudType.GCP) {
+      return await gcpPolicyService.writeRole(policy);
+    } else if (type == CloudType.AWS) {
+      return await AWSPolicyService.writePolicy(policy);
+    } else {
+      return { error: 'Invalid cloud type' };
+    }
   }
 }

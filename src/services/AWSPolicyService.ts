@@ -7,6 +7,22 @@ import {
 } from '@aws-sdk/client-iam'; // ES Modules import
 import { generateUUID } from '../ai/graphs/utils/uuid';
 
+export type PolicyStatement = {
+  Effect: string;
+  Action: string[];
+  Resource: string[];
+};
+
+export type PolicyDocument = {
+  Version: string;
+  Statement: PolicyStatement[];
+};
+
+export type AWSPolicyPayload = {
+  PolicyName?: string;
+  PolicyDocument: PolicyDocument;
+};
+
 const client = new IAMClient({ region: 'us-east-1' });
 
 export class AWSPolicyService {
@@ -26,7 +42,7 @@ export class AWSPolicyService {
     return decoded;
   }
 
-  static async writePolicy(policy: any) {
+  static async writePolicy(policy: AWSPolicyPayload) {
     const writerClient = new IAMClient({
       region: 'us-east-1',
       credentials: {
@@ -35,16 +51,9 @@ export class AWSPolicyService {
       },
     });
 
-    const isPolicyDetail = !!policy.Statement;
-
     const input: CreatePolicyCommandInput = {
-      // CreatePolicyRequest
-      PolicyName: policy.PolicyName || `nameless-policy-${generateUUID(8)}`, // required
-      PolicyDocument: JSON.stringify(
-        isPolicyDetail ? policy : policy.PolicyDocument,
-        null,
-        2
-      ), // required
+      PolicyName: policy.PolicyName || `nameless-policy-${generateUUID(8)}`,
+      PolicyDocument: JSON.stringify(policy.PolicyDocument), // required
     };
 
     console.log(JSON.stringify(input, null, 2));

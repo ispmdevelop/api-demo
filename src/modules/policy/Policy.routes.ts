@@ -15,4 +15,8 @@ router.post('/deliver_policy', async (req, res) => {
   return policyController.create(req, res);
 });
 
+router.post('/:cloudType/deliver_policy', async (req, res) => {
+  return policyController.create(req, res);
+});
+
 export default router;

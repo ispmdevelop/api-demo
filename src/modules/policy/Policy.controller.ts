@@ -58,6 +58,8 @@ export class PolicyController {
   }
 
   async create(req: Request, res: Response) {
+    console.log('params', req.params);
+    const cloudType = req.params.cloudType as string;
     const policy = req.body;
     if (!policy) {
       return res
@@ -66,7 +68,7 @@ export class PolicyController {
           NetworkResponse.CreateErrorResponse('Please provide a policy', 400)
         );
     }
-    const count = await policyRepository.create(policy);
+    const count = await policyRepository.create(policy, cloudType);
     return res
       .status(201)
       .json(
