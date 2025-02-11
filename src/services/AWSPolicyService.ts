@@ -7,22 +7,21 @@ import {
 } from '@aws-sdk/client-iam'; // ES Modules import
 import { generateUUID } from '../ai/graphs/utils/uuid';
 
-export type PolicyStatement = {
-  Effect: string;
-  Action: string[];
-  Resource: string[];
-};
 
-export type PolicyDocument = {
-  Version: string;
-  Statement: PolicyStatement[];
-};
 
 export type AWSPolicyPayload = {
   PolicyName?: string;
   PolicyDocument: PolicyDocument;
 };
-
+export type PolicyDocument = {
+  Version: string;
+  Statement: PolicyStatement[];
+};
+export type PolicyStatement = {
+  Effect: string;
+  Action: string[];
+  Resource: string[];
+};
 const client = new IAMClient({ region: 'us-east-1' });
 
 export class AWSPolicyService {
