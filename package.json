@@ -26,7 +26,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@aws-sdk/client-iam": "^3.726.1",
+    "@aws-sdk/client-cloudtrail": "^3.744.0",
+    "@aws-sdk/client-iam": "^3.744.0",
     "@azure/identity": "^4.5.0",
     "@langchain/aws": "^0.1.2",
     "@langchain/community": "^0.3.18",
